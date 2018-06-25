@@ -1,0 +1,62 @@
+log2FoldChange,padj,Phylum,Class,Order,Family,Genus,Species,Mean_Abundance_Unburned,Mean_Abundance_Burned
+22.89017232,1.55E-11,Actinobacteria,Actinobacteria,Frankiales,Acidothermaceae,Acidothermus,uncultured bacterium,<0.0001,0.003
+22.82546584,1.55E-11,Proteobacteria,Alphaproteobacteria,Rhodospirillales,JG37-AG-20,uncultured bacterium,,<0.0001,0.003
+22.45563565,3.20E-11,Acidobacteria,Acidobacteria,Subgroup 3,Unknown Family,Candidatus Solibacter,,<0.0001,0.002
+22.16692768,5.54E-11,Proteobacteria,Alphaproteobacteria,Rhizobiales,Xanthobacteraceae,uncultured,uncultured bacterium,<0.0001,0.002
+21.9161043,7.50E-11,Acidobacteria,Acidobacteria,Subgroup 3,Unknown Family,Candidatus Solibacter,,<0.0001,0.002
+21.85056444,7.50E-11,Planctomycetes,Planctomycetacia,Planctomycetales,Planctomycetaceae,uncultured,,<0.0001,0.002
+21.5863953,1.28E-10,Acidobacteria,Acidobacteria,Acidobacteriales,Acidobacteriaceae (Subgroup 1),uncultured,,<0.0001,0.001
+20.8979669,5.32E-10,Proteobacteria,Alphaproteobacteria,Rhodospirillales,Acetobacteraceae,,,<0.0001,0.001
+19.62922666,8.80E-09,Actinobacteria,Actinobacteria,Pseudonocardiales,Pseudonocardiaceae,Actinophytocola,uncultured bacterium,<0.0001,0.013
+19.29426414,1.74E-08,Planctomycetes,Phycisphaerae,WD2101 soil group,uncultured bacterium,,,<0.0001,0.008
+19.21152237,1.98E-08,Planctomycetes,Phycisphaerae,WD2101 soil group,uncultured bacterium,,,<0.0001,0.007
+18.93731141,3.41E-08,Acidobacteria,Acidobacteria,Subgroup 2,uncultured forest soil bacterium,,,<0.0001,0.005
+18.86810701,3.53E-08,Verrucomicrobia,Spartobacteria,Chthoniobacterales,Chthoniobacteraceae,Chthoniobacter,uncultured bacterium,<0.0001,0.004
+18.72638436,4.88E-08,Planctomycetes,Planctomycetacia,Planctomycetales,Planctomycetaceae,Singulisphaera,uncultured bacterium,<0.0001,0.004
+18.68661549,5.08E-08,Proteobacteria,Alphaproteobacteria,Rhizobiales,,,,<0.0001,0.004
+18.63539012,5.43E-08,Verrucomicrobia,OPB35 soil group,,,,,<0.0001,0.004
+18.57860887,5.65E-08,Proteobacteria,Deltaproteobacteria,Myxococcales,Polyangiaceae,Sorangium,uncultured bacterium,<0.0001,0.003
+18.57860887,5.65E-08,Acidobacteria,Acidobacteria,Acidobacteriales,Acidobacteriaceae (Subgroup 1),uncultured,,<0.0001,0.003
+18.54448552,5.85E-08,Planctomycetes,Planctomycetacia,Planctomycetales,Planctomycetaceae,uncultured,,<0.0001,0.022
+18.38428865,6.56E-08,Actinobacteria,Actinobacteria,Micrococcales,Microbacteriaceae,Lysinimonas,uncultured bacterium,<0.0001,0.013
+18.37942356,7.72E-08,Actinobacteria,Actinobacteria,Micromonosporales,Micromonosporaceae,Actinoplanes,uncultured bacterium,<0.0001,0.019
+18.16740869,1.09E-07,Planctomycetes,Planctomycetacia,Planctomycetales,Planctomycetaceae,Planctomyces,,<0.0001,0.002
+18.15279105,1.09E-07,Proteobacteria,Alphaproteobacteria,Rhodospirillales,Acetobacteraceae,uncultured,uncultured bacterium,<0.0001,0.002
+18.09722795,1.18E-07,Firmicutes,Bacilli,Bacillales,Paenibacillaceae,Paenibacillus,Paenibacillus amylolyticus,<0.0001,0.002
+18.07223651,1.21E-07,Proteobacteria,Gammaproteobacteria,Xanthomonadales,uncultured,uncultured bacterium,,<0.0001,0.001
+18.03011613,1.28E-07,Planctomycetes,Planctomycetacia,Planctomycetales,Planctomycetaceae,uncultured,,<0.0001,0.001
+18.00562209,1.31E-07,Actinobacteria,Thermoleophilia,Solirubrobacterales,YNPFFP1,uncultured bacterium,,<0.0001,0.001
+17.90099209,1.57E-07,Actinobacteria,Thermoleophilia,Solirubrobacterales,Solirubrobacteraceae,Solirubrobacter,uncultured bacterium,<0.0001,0.003
+17.86433623,1.65E-07,Planctomycetes,Planctomycetacia,Planctomycetales,Planctomycetaceae,uncultured,uncultured bacterium,<0.0001,0.001
+17.84333339,1.68E-07,Actinobacteria,Thermoleophilia,Gaiellales,uncultured,uncultured bacterium,,<0.0001,0.001
+17.62090547,2.57E-07,Proteobacteria,Deltaproteobacteria,Bdellovibrionales,Bdellovibrionaceae,Bdellovibrio,uncultured bacterium,<0.0001,0.001
+17.58318693,2.71E-07,Acidobacteria,Acidobacteria,Subgroup 3,Unknown Family,Bryobacter,uncultured Acidobacteria bacterium,<0.0001,0.001
+17.56304386,2.75E-07,Planctomycetes,Planctomycetacia,Planctomycetales,Planctomycetaceae,uncultured,,<0.0001,0.001
+17.4166723,3.60E-07,Acidobacteria,Acidobacteria,Subgroup 6,,,,<0.0001,0.002
+17.17290026,5.40E-07,Bacteroidetes,Sphingobacteriia,Sphingobacteriales,Chitinophagaceae,uncultured,,<0.0001,0.002
+16.98020507,8.15E-07,Proteobacteria,Alphaproteobacteria,Rhodospirillales,DA111,uncultured bacterium,,<0.0001,0.001
+16.95302258,8.39E-07,Actinobacteria,Actinobacteria,Corynebacteriales,Nocardiaceae,Rhodococcus,Rhodococcus erythropolis,<0.0001,0.002
+16.84403718,1.02E-06,Verrucomicrobia,Verrucomicrobia Incertae Sedis,Unknown Order,Unknown Family,Candidatus Methylacidiphilum,uncultured bacterium,<0.0001,0.001
+11.73512756,0.004188324,Proteobacteria,Alphaproteobacteria,Rhizobiales,Xanthobacteraceae,uncultured,,0.002,0.025
+11.66430214,0.005316657,Planctomycetes,Phycisphaerae,WD2101 soil group,uncultured bacterium,,,<0.0001,0.012
+11.43204659,0.00697689,Actinobacteria,Thermoleophilia,Gaiellales,uncultured,uncultured actinobacterium,,<0.0001,0.004
+10.76861027,0.013418464,Proteobacteria,Alphaproteobacteria,Rhizobiales,Xanthobacteraceae,uncultured,uncultured bacterium,0.001,0.008
+10.32140725,0.023925913,Actinobacteria,Actinobacteria,Streptomycetales,Streptomycetaceae,Streptomyces,uncultured bacterium,0.001,0.006
+9.801941626,0.041401233,Actinobacteria,Thermoleophilia,Gaiellales,uncultured,,,0.003,0.005
+9.765643749,0.042556967,Acidobacteria,Acidobacteria,Subgroup 4,RB41,uncultured Acidobacteria bacterium,,0.004,0.012
+9.714810351,0.044448943,Proteobacteria,Gammaproteobacteria,Xanthomonadales,uncultured,uncultured bacterium,,0.003,0.014
+9.666942212,0.044516688,Proteobacteria,Betaproteobacteria,Burkholderiales,Burkholderiaceae,Burkholderia,,0.014,0.030
+8.349583828,0.029014517,Actinobacteria,Thermoleophilia,Solirubrobacterales,480-2,uncultured bacterium,,0.017,0.042
+5.431830022,0.02584581,Acidobacteria,Acidobacteria,Subgroup 6,,,,0.019,0.038
+-6.929080197,0.02584581,Acidobacteria,Acidobacteria,Acidobacteriales,Acidobacteriaceae (Subgroup 1),,,0.029,0.022
+-9.523532331,0.011651611,Proteobacteria,Betaproteobacteria,Burkholderiales,Oxalobacteraceae,uncultured,uncultured bacterium,0.015,0.000
+-10.45079068,0.020335888,Proteobacteria,Alphaproteobacteria,Rhizobiales,Rhizobiales Incertae Sedis,Rhizomicrobium,uncultured bacterium,0.008,0.001
+-10.45307059,0.019817582,Bacteroidetes,Sphingobacteriia,Sphingobacteriales,Sphingobacteriaceae,Mucilaginibacter,uncultured bacterium,0.035,0.001
+-20.3279315,1.77E-09,Planctomycetes,Planctomycetacia,Planctomycetales,Planctomycetaceae,uncultured,uncultured bacterium,0.001,<0.0001
+-20.83356921,5.78E-10,Proteobacteria,Alphaproteobacteria,Rhodospirillales,Rhodospirillaceae,,,0.009,<0.0001
+-21.50536802,1.44E-10,Proteobacteria,Alphaproteobacteria,Rhizobiales,Bradyrhizobiaceae,Bradyrhizobium,,0.020,<0.0001
+-21.55473256,1.38E-10,Proteobacteria,Alphaproteobacteria,Rhizobiales,Rhizobiaceae,Rhizobium,uncultured bacterium,0.018,<0.0001
+-21.58645163,1.28E-10,Acidobacteria,Acidobacteria,Subgroup 3,Unknown Family,Candidatus Solibacter,,0.002,<0.0001
+-21.96632848,7.50E-11,Actinobacteria,Thermoleophilia,Solirubrobacterales,480-2,uncultured bacterium,,0.013,<0.0001
+-25.50167206,2.05E-14,Planctomycetes,Planctomycetacia,Planctomycetales,Planctomycetaceae,uncultured,uncultured bacterium,0.002,<0.0001
+-25.54074492,2.05E-14,Proteobacteria,Deltaproteobacteria,Myxococcales,Haliangiaceae,Haliangium,uncultured bacterium,0.004,<0.0001
