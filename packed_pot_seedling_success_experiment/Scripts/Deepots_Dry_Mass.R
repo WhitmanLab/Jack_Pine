@@ -3,6 +3,7 @@ Deepot_Dry_Mass <- read_excel("~/Box Sync/WhitmanLab/Projects/JackPine/Data/Lab_
 View(Deepot_Dry_Mass)
 library("ggplot2", lib.loc="/Library/Frameworks/R.framework/Versions/3.3/Resources/library")
 library(dplyr)
+library(lsmeans)
 
 #Simple bar plot of dry mass
 class(Deepot_Dry_Mass)
@@ -58,6 +59,11 @@ tukey.s.NW
 #pre-lab p=0.0047280
 #pre-post p=0.0567
 
+### Adjusting for unequal sample sizes
+pairs(lsmeans(lm(Dry_Mass_g ~ Soil_Type, s.NW), "Soil_Type"), adjust = "mvt")
+#post-lab p=0.0001
+#pre-lab p=0.0048
+#pre-post p=0.0564
 
 #Stats for the NW seed lot - ROOTS
 r.NW = Deepot_Dry_Mass[Deepot_Dry_Mass$Part == "Roots" & Deepot_Dry_Mass$Seed_Type == "Northwest", ]
@@ -69,6 +75,11 @@ anova.s.NW
 
 tukey.r.NW = TukeyHSD(x = anova.r.NW, "Soil_Type")
 tukey.r.NW
+
+pairs(lsmeans(lm(Dry_Mass_g ~ Soil_Type, r.NW), "Soil_Type"), adjust = "mvt")
+#post-lab p=0.0002
+#pre-lab p=0.0004
+#pre-post p=0.9644
 
 #Stats with no central seeds in field soil 
 head(s)
