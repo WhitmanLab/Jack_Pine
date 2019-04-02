@@ -3,7 +3,7 @@ library("dplyr")
 library("ggplot2")
 library("vegan")
 library("gridExtra")
-#install.packages("dplyr")
+library("DESeq2")
 
 
 setwd("~/Box Sync/WhitmanLab/Projects/JackPine/Data/Seq/OTU_table")
@@ -12,11 +12,12 @@ OTU_table = otu_table(OTU_table, taxa_are_rows = TRUE)
 head(OTU_table)
 #write.csv(colnames(OTU_table), "Sample_Data.csv")
 #-----------------------------------------------------------------------
-  
+ OTU_table[21,]
   
 TaxTab = read.table("taxonomy.tsv",sep="\t", fill=TRUE)
 # Gets the taxonomy table separated into the name+size, taxonomy, and two scores.
 head(TaxTab)
+TaxTab[23,]
 
 V1split = read.table(textConnection(as.character(TaxTab$V1)), sep=";",fill=TRUE, header=FALSE)
 # Split out the otu ID and count
@@ -90,7 +91,7 @@ sample_sums(ps.norm)
 #Stacked bar by phylum
 p = plot_bar(ps.norm, fill = "Phylum")
 p = p + geom_bar(aes(color=Phylum), stat = "identity", position = "stack")
-#p
+p
 
 
 ps.act = prune_taxa(data.frame(tax_table(ps.norm))$Phylum=="Actinobacteria",ps.norm)
@@ -102,6 +103,8 @@ p = p + geom_bar(aes(color=Family), stat = "identity", position = "stack")
 p
 
 
+
+#-----------------------------------
 #no blanks
 ps.norm.nb = prune_samples(sample_data(ps.norm)$Soil_Type %in% c("O", "A"), ps.norm)
 ps.norm.nb
@@ -124,7 +127,7 @@ p = p + scale_fill_identity(name="Site ID", guide="legend", labels=c("No", "Yes"
 p 
 
 #Stats with no blanks
-d = distance(ps.norm.nb, method = "bray")
+d = phyloseq::distance(ps.norm.nb, method = "bray")
 samdat = sample_data(ps.norm.nb)
 groups = as.factor(samdat$Burned)
 x = betadisper(d, groups)
@@ -133,6 +136,7 @@ anova(x)
 #p = 0.02695 for Soil Type
 #p = 0.9568 for Burned
 #p = 0.6097 for plot
+
 
 d.adonis = adonis(d~
                       sample_data(ps.norm.nb)$Plot + sample_data(ps.norm.nb)$Soil_Type + sample_data(ps.norm.nb)$Burned)
@@ -144,7 +148,7 @@ d.adonis
 
 #Only O horizon state with no blanks 
 ps.norm.o = prune_samples(sample_data(ps.norm)$Soil_Type %in% c("O"), ps.norm)
-d.o = distance(ps.norm.o, method = "bray")
+d.o = phyloseq::distance(ps.norm.o, method = "bray")
 samdat = sample_data(ps.norm.o)
 groups = as.factor(samdat$Plot)
 x = betadisper(d.o, groups)
@@ -181,7 +185,7 @@ p.O = p
 
 #Only A stats with no blanks
 ps.norm.a = prune_samples(sample_data(ps.norm)$Soil_Type %in% c("A"), ps.norm)
-d.a = distance(ps.norm.a, method = "bray")
+d.a = phyloseq::distance(ps.norm.a, method = "bray")
 samdat = sample_data(ps.norm.a)
 groups = as.factor(samdat$Plot)
 x = betadisper(d.a, groups)
@@ -215,10 +219,11 @@ p.A = p
 
 grid.arrange(p.O,p.A,ncol=2)
 
-
+#---------------------------------------------------
 
 #With the blanks
 MyOrdination = ordinate(physeq = ps.norm, method="PCoA", distance="bray", trymax=1000)
+#remove # to run the hellinger 
 #MyOrdination = ordinate(physeq = ps.hellinger, method="PCoA", distance="bray", trymax=1000)
 sample_data(ps.norm)
 
@@ -235,9 +240,9 @@ p = p + theme(legend.text = element_text(size = 12))
 p = p + theme(legend.title = element_text(size = 12))
 p = p + theme(legend.title = element_text(face = "bold"))
 p 
-
+#---------------------------------------------------------------------------------
   
-# Plotting phylum relative abundance
+### Plotting phylum relative abundance
 
 df = psmelt(ps.norm.nb)
 df
@@ -296,10 +301,11 @@ sapply(phyla,anova_function)
 # None of the phyla are signficantly different from O to A and burned/unburned, testing all 4 at once
 
 
-
+# You'll need to install the package DESeq2 before you can load it
+# Commands:
 # source("https://bioconductor.org/biocLite.R")
 # biocLite("DESeq2")
-library(DESeq2)
+#library(DESeq2)
 
 #DESeq2 takes raw reads, not relative abundances,
 # So we make a non-normalized no blank ps object
@@ -327,6 +333,7 @@ dseq = DESeq(dseq, quiet = TRUE, fitType = "local")
 # which were included in the analysis
 resultsNames(dseq)
 
+
 # Creating an object to hold the results
 results = results(dseq, contrast=c("Burned","Y","N"), cooksCutoff=TRUE)
 # (You can change Cooks Cutoff to control outliers or not)
@@ -334,7 +341,7 @@ head(results)
 
 # Just making one for the O vs A contrast too.
 results.OA = results(dseq, contrast=c("Soil_Type","O","A"), cooksCutoff=TRUE)
-
+head(results.OA)
 
 # Join the results back up with the OTU taxonomy 
 results = data.frame(results,taxonomy,row.names(taxonomy))
@@ -343,10 +350,12 @@ head(results)
 threshold = function (thresh){
   dplyr::filter(results, baseMean >= thresh) %>% 
     dplyr::mutate(padj = p.adjust(pvalue,"BH")) %>%
-    dplyr::summarize(cutoff=thresh, count=sum(padj<=0.10, na.rm = TRUE))
+    dplyr::summarize(cutoff=thresh, count=sum(padj<=0.05, na.rm = TRUE))
 }
+tail(results)
 
 range = seq(0,2,0.05)
+range
 # Creates a range of numbers we are interested in for adjusted p values
 thresh.s = plyr::ldply(range, threshold)
 # Applys the Threshold function we created above to the range of numbers we created above.
@@ -366,10 +375,8 @@ results = results %>%
 # You can see this results in dropping quite a few OTUs
 # Also, most p-values are not significant - that makes sense.
 dim(results)
+head(results)
 
-# Let's add a categorical column that states whether the adjusted pvalue (padj) is less than a cutoff
-
-cutoff = 0.05
 
 d = results %>%
   filter(Phylum %in% phylumtokeep$Phylum)
@@ -407,6 +414,56 @@ p = p + theme(panel.grid.major = element_blank(), panel.grid.minor = element_bla
 p = p + geom_hline(yintercept=0)
 
 p
+
+############### Making same plot but at finer taxonomic level ##########################
+SigOrders = d %>%
+    filter(Sig == "significant")%>%
+    group_by(Phylum,Order)%>%
+    summarize(N=n())%>%
+    arrange(Phylum)
+OrderKeep = SigOrders$Order
+d.orders = d %>%
+    filter(Order %in% OrderKeep)%>%
+    filter(!is.na(Order))%>%
+    filter(Order != "Unknown Order")%>%
+    filter(Order != "")
+OrderKeep
+d.orders$Order = ordered(d.orders$Order, levels = OrderKeep)
+
+p = ggplot(d.orders, aes(x = Order, y = log2FoldChange, fill=Phylum, alpha=Sig, size=baseMean))
+# establishing our plot is based on the data table d, with our x being the phylum, and the y being log2fold change,
+# and the colour being phylum, relative size proportional to mean abundance, and alpha (transparency) based on
+# whether or not the adjusted p value is significant.
+p = p + geom_jitter(shape=21, width=0.1) # Using shape=21 to get the option that has an outline and a fill colour
+p = p + theme_bw()
+# sets a theme - adjusts a bunch of aesthetics at once
+
+p = p + theme(strip.text.x = element_text(size = 14),
+              strip.text.y = element_text(size = 14),
+              axis.text.x = element_text(size = 10, angle = 45, hjust = 1, vjust = 1, face="italic"),
+              axis.title.x = element_text(size = 14),
+              axis.text.y = element_text(size=14),
+              axis.title.y = element_text(size = 14),
+              legend.title = element_text(size=14),
+              legend.text = element_text(size = 10),
+              #legend.position = "none",
+              strip.background = element_blank()) + guides(size=FALSE,alpha=FALSE)
+# sets a bunch of visual paramters for the legend (none) and other text
+
+p = p + labs(x = "Order")
+# sets the label for the x axis.
+
+p = p + labs(y = expression(paste("", log[2]," fold change vs. unburned",sep="")))
+# sets the label for the y axes.
+
+p = p + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+# Gets rid of the default gridlines
+
+p = p + geom_hline(yintercept=0)
+
+p
+
+
 
 # Considering O vs. A instead of Burned/Unburned
 
@@ -479,7 +536,7 @@ p = p + geom_hline(yintercept=0)
 
 p
 
-# Which are the significant responders?
+### Which are the significant responders?
 
 Sig.Burned = results[results$Sig=="significant",]
 Sig.Burned = Sig.Burned %>%
@@ -491,7 +548,11 @@ write.csv(Sig.Burned,"SignificantBurnResponders.csv")
 Sig.OvsA = results.OA[results.OA$Sig=="significant",]
 dim(Sig.OvsA)
 
-# What if more taxa respond in O vs A to burning?
+
+
+
+
+### What if more taxa respond in O vs A to burning?
 
 #DESeq2 takes raw reads, not relative abundances,
 # So we make a non-normalized no blank ps object
@@ -610,23 +671,150 @@ p = p + xlim(-10,10) + ylim(-10,10) + xlab("Burn response in A horizon")+ ylab("
 p
 
 
-head(Sig.Burned)
-# What are the relative abundances of the "responders"?
+##### What are the relative abundances of the "responders"?
 
-cutoff = 0.01
+head(Sig.Burned)
+colnames(Sig.Burned)
+colnames(Sig.Burned)[14]="OTU"
+colnames(Sig.Burned)
+
 d.Resp = df %>%
-    filter(OTU %in% Sig.Burned$row.names.taxonomy.)%>%
-    group_by(OTU,Burned)%>%
-    summarize(Sum=sum(Abundance))%>%
-    arrange(-Sum)
+    filter(OTU %in% Sig.Burned$OTU)%>%
+    group_by(OTU,Burned,Soil_Type)%>%
+    mutate(NonZero = ifelse(Abundance>0,1,0))%>%
+    summarize(MeanRelabund=mean(Abundance),NonZero=sum(NonZero))%>%
+    arrange(-MeanRelabund)
 d.Resp
 
-write.csv(d.Resp,"Burn_Responsive_Relabund.csv")
+#write.csv(d.Resp,"Burn_Responsive_Relabund.csv")
+
+### Filtering responders
+Merged = merge(d.Resp, Sig.Burned, by="OTU",all.x=TRUE)
+head(Merged)
+
+Merged = Merged%>%
+    group_by(OTU)%>%
+    filter(min(MeanRelabund)>0 | max(NonZero)>3 | mean(MeanRelabund)>0.001)%>%
+    group_by(OTU,log2FoldChange,padj,Phylum,Class,Order,Family,Genus,Species,Sig,Burned,Soil_Type)%>%
+    summarize(MeanRelabund=mean(MeanRelabund))%>%
+    arrange(-log2FoldChange,Burned)
+head(Merged)
+
+write.csv(Merged, "Burn_Responsive_Filtered.csv")
+
+d = results %>%
+  filter(Phylum %in% phylumtokeep$Phylum)%>%
+  mutate(Sig = ifelse(row.names.taxonomy. %in% Merged$OTU, "significant","not significant"))
+head(d)
+
+p = ggplot(d, aes(x = Order, y = log2FoldChange, fill=Phylum, alpha=Sig, size=baseMean))
+# establishing our plot is based on the data table d, with our x being the phylum, and the y being log2fold change,
+# and the colour being phylum, relative size proportional to mean abundance, and alpha (transparency) based on
+# whether or not the adjusted p value is significant.
+p = p + geom_jitter(shape=21, width=0.1) # Using shape=21 to get the option that has an outline and a fill colour
+p = p + theme_bw()
+# sets a theme - adjusts a bunch of aesthetics at once
+
+p = p + theme(strip.text.x = element_text(size = 14),
+              strip.text.y = element_text(size = 14),
+              axis.text.x = element_text(size = 10, angle = 45, hjust = 1, vjust = 1, face="italic"),
+              axis.title.x = element_text(size = 14),
+              axis.text.y = element_text(size=14),
+              axis.title.y = element_text(size = 14),
+              legend.title = element_text(size=14),
+              legend.text = element_text(size = 10),
+              #legend.position = "none",
+              strip.background = element_blank()) + guides(fill=FALSE, size=FALSE,alpha=FALSE)
+# sets a bunch of visual paramters for the legend (none) and other text
+
+p = p + labs(x = "Phylum")
+# sets the label for the x axis.
+
+p = p + labs(y = expression(paste("", log[2]," fold change vs. unburned",sep="")))
+# sets the label for the y axes.
+
+p = p + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+# Gets rid of the default gridlines
+
+p = p + geom_hline(yintercept=0)
+
+p
+
+### Plotting at finer taxonomic level
+SigOrders = d %>%
+  filter(Sig == "significant")%>%
+  group_by(Phylum,Order)%>%
+  summarize(N=n())%>%
+  arrange(Phylum)
+OrderKeep = SigOrders$Order
+d.orders = d %>%
+  filter(Order %in% OrderKeep)%>%
+  filter(!is.na(Order))%>%
+  filter(Order != "Unknown Order")%>%
+  filter(Order != "")
+OrderKeep
+d.orders$Order = ordered(d.orders$Order, levels = OrderKeep)
+
+p = ggplot(d.orders, aes(x = Order, y = log2FoldChange, fill=Phylum, alpha=Sig, size=baseMean))
+# establishing our plot is based on the data table d, with our x being the phylum, and the y being log2fold change,
+# and the colour being phylum, relative size proportional to mean abundance, and alpha (transparency) based on
+# whether or not the adjusted p value is significant.
+p = p + geom_jitter(shape=21, width=0.1) # Using shape=21 to get the option that has an outline and a fill colour
+p = p + theme_bw()
+# sets a theme - adjusts a bunch of aesthetics at once
+
+p = p + theme(strip.text.x = element_text(size = 14),
+              strip.text.y = element_text(size = 14),
+              axis.text.x = element_text(size = 10, angle = 45, hjust = 1, vjust = 1, face="italic"),
+              axis.title.x = element_text(size = 14),
+              axis.text.y = element_text(size=14),
+              axis.title.y = element_text(size = 14),
+              legend.title = element_text(size=14),
+              legend.text = element_text(size = 10),
+              #legend.position = "none",
+              strip.background = element_blank()) + guides(size=FALSE,alpha=FALSE)
+# sets a bunch of visual paramters for the legend (none) and other text
+
+p = p + labs(x = "Order")
+# sets the label for the x axis.
+
+p = p + labs(y = expression(paste("", log[2]," fold change vs. unburned",sep="")))
+# sets the label for the y axes.
+
+p = p + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+# Gets rid of the default gridlines
+
+p = p + geom_hline(yintercept=0)
+
+p
 
 
-BurnOnePct = as.vector(d.Resp$OTU)
 
+##################### Looking at Archaea ########################
+# Looking to find Archaea
+data.frame(tax_table(ps.norm.nb))[data.frame(tax_table(ps.norm.nb))$Domain=="Archaea",]
+ps.A = subset_taxa(ps,Domain == "Archaea")
+ps.A = prune_samples(sample_sums(ps.A)>0,ps.A)
+otu_table(ps.A)
+ps.A.norm =  transform_sample_counts(ps.A, function(x) x / sum(x) )
 
-Burners = subset_taxa(ps.norm,taxa_names(ps.norm) %in% BurnOnePct)
-tax_table(Burners)
-write.csv(data.frame(tax_table(Burners)),"Burn_Responsive_1Pct.csv")
+ORD =  ordinate(physeq = ps.A.norm, method="PCoA", distance="bray", trymax=1000)
+
+p = plot_ordination(physeq = ps.A.norm, ordination = ORD, type = "samples", axes = 1:2, shape = "Burned",color="Plot")
+#p = p + scale_colour_manual(values=c("red", "orange", "green", "blue", "purple", "pink"))
+p = p + guides(size=guide_legend(title="Horizon"),colour=guide_legend(title="Site ID"))
+p = p + theme_bw()
+p = p + theme(panel.grid = element_blank(), strip.background = element_blank())
+p = p + theme(strip.text = element_text(size=12), axis.text = element_text(size=12), axis.title = element_text(size=12), axis.text.x = element_text(size=12))
+p = p + theme(legend.text = element_text(size = 12))
+p = p + theme(legend.title = element_text(size = 12))
+p = p + theme(legend.title = element_text(face = "bold"))
+p = p + facet_wrap(~sample_data(ps.A.norm)$Soil_Type)
+p = p + geom_point(size=3)
+p = p + scale_fill_identity(name="Site ID", guide="legend", labels=c("No", "Yes")) + scale_color_manual(name="Site_ID", values=c("red", "orange", "green", "blue", "purple", "pink"), labels=c("A","B", "C", "D", "E", "F"))
+p 
+
+p = plot_bar(ps.A, fill = "OTU")
+p = p + geom_bar(aes(color=OTU), stat = "identity", position = "stack")
+p = p + facet_wrap(~sample_data(ps.A.norm)$Burned)
+p
